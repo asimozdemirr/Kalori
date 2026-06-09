@@ -1067,7 +1067,7 @@ body{font-family:var(--font);color:var(--text);max-width:430px;margin:0 auto;dis
 <!-- SETTINGS -->
 <div class="scr" id="s-settings">
 <div style="padding-top:14px">
-  <div class="pg-title">⚙️ <em>Ayarlar</em></div>
+  <div class="pg-title">⚙️ <em>Aya//rlar</em></div>
   <div class="pg-sub">Uygulama tercihleri</div>
 
   <div class="card">
@@ -3198,56 +3198,58 @@ function toggleDark(on){S.darkMode=on;save();document.body.classList.toggle('dar
 
 // ===== SU HATIRLATICI =====
 let waterTimer=null;
-function toggleWaterReminder(on){
+async function toggleWaterReminder(on){
   S.waterReminder.enabled=on;save();
   if(on){
-    if(!('Notification' in window)){
-      toast('❌ Bu cihaz/tarayıcı bildirim desteklemiyor');
-      document.getElementById('water-rem-toggle').checked=false;
-      S.waterReminder.enabled=false;save();
-      return;
-    }
-    Notification.requestPermission().then(p=>{
-      if(p==='granted'){
+    // Capacitor iOS Bildirim İzni
+    if(window.Capacitor && window.Capacitor.Plugins.LocalNotifications){
+      const perm = await window.Capacitor.Plugins.LocalNotifications.requestPermissions();
+      if(perm.display === 'granted'){
         toast('🔔 Hatırlatıcı açıldı');
         S.waterReminder.lastNotify=Date.now();save();
         startWaterReminder();
-        // Hemen test bildirimi gönder
-        setTimeout(()=>{
-          try{
-            new Notification('💧 KaloriX Su Hatırlatıcı',{body:'Bildirimler aktif! '+S.waterReminder.interval+' saatte bir hatırlatacağım.',icon:'icon.png'});
-          }catch(e){
-            // Bazı tarayıcılarda ServiceWorker gerekir
-            if(navigator.serviceWorker&&navigator.serviceWorker.ready){
-              navigator.serviceWorker.ready.then(reg=>reg.showNotification('💧 KaloriX',{body:'Bildirimler aktif!',icon:'icon.png'})).catch(()=>{});
-            }
-          }
-        },800);
-      }else{
+        // Test bildirimi gönder
+        Capacitor.Plugins.LocalNotifications.schedule({
+          notifications: [{
+            title: "💧 KaloriX Su Hatırlatıcı",
+            body: "Bildirimler aktif! " + S.waterReminder.interval + " saatte bir hatırlatacağım.",
+            id: 1,
+            schedule: { at: new Date(Date.now() + 1000) } // 1 saniye sonra
+          }]
+        });
+      } else {
         toast('❌ Bildirim izni verilmedi. Ayarlardan izin ver.');
         document.getElementById('water-rem-toggle').checked=false;
         S.waterReminder.enabled=false;save();
       }
-    }).catch(()=>{
-      toast('❌ İzin alınamadı');
+    } else {
+      toast('❌ Bildirim altyapısına ulaşılamadı.');
       document.getElementById('water-rem-toggle').checked=false;
       S.waterReminder.enabled=false;save();
-    });
-  }else{stopWaterReminder();toast('🔕 Hatırlatıcı kapatıldı');}
+    }
+  }else{
+    stopWaterReminder();toast('🔕 Hatırlatıcı kapatıldı');
+  }
 }
+
 function updateWaterInterval(v){S.waterReminder.interval=parseInt(v);save();if(S.waterReminder.enabled)startWaterReminder();}
-function fireWaterNotification(){
+
+async function fireWaterNotification(){
   const realToday=getTd();
   const e=S.waterLog.find(w=>w.date===realToday);
   const cur=e?e.amount:0, goal=waterGoal();
-  if(cur>=goal)return; // hedef dolduysa rahatsız etme
-  const body='Bugün '+cur+'/'+goal+'ml içtin. Bir bardak su iç! 💪';
-  try{
-    new Notification('💧 Su içme zamanı!',{body:body,icon:'icon.png',tag:'water'});
-  }catch(e){
-    if(navigator.serviceWorker&&navigator.serviceWorker.ready){
-      navigator.serviceWorker.ready.then(reg=>reg.showNotification('💧 Su içme zamanı!',{body:body,icon:'icon.png',tag:'water'})).catch(()=>{});
-    }
+  if(cur>=goal)return; // Hedef dolduysa rahatsız etme
+  
+  const msg='Bugün '+cur+'/'+goal+'ml içtin. Bir bardak su iç! 💪';
+  
+  if(window.Capacitor && window.Capacitor.Plugins.LocalNotifications){
+    await Capacitor.Plugins.LocalNotifications.schedule({
+      notifications: [{
+        title: "💧 Su içme zamanı!",
+        body: msg,
+        id: Math.floor(Math.random() * 100000)
+      }]
+    });
   }
   S.waterReminder.lastNotify=Date.now();save();
 }
