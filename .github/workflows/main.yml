@@ -12,11 +12,10 @@ jobs:
         with:
           node-version: '18'
           
-      - name: Klasör Yapısını Otomatik Düzenle ve Paketleri Yükle
+      - name: Klasör Yapısını Düzenle
         run: |
           npm install
           mkdir -p www
-          # Dosyalar ana dizindeyse otomatik olarak www içine taşı
           cp index.html www/ 2>/dev/null || true
           cp manifest.json www/ 2>/dev/null || true
           cp icon.* www/ 2>/dev/null || true
@@ -25,6 +24,12 @@ jobs:
         run: |
           npx cap add ios
           npx cap sync ios
+          
+      - name: İkonları iOS Formatına Dönüştür
+        run: |
+          mkdir -p assets
+          cp icon.png assets/icon.png 2>/dev/null || cp icon.svg assets/icon.svg 2>/dev/null || true
+          npx @capacitor/assets generate --ios
           
       - name: CocoaPods Bağımlılıklarını Kur
         run: |
