@@ -3001,10 +3001,28 @@ function exportCSV(){
   downloadFile('kalorix-veriler.csv','text/csv',csv);
   toast('📊 CSV indirildi');
 }
-function exportJSON(){
-  const dateStr=new Date().toISOString().slice(0,10);
-  downloadFile('kalorix-yedek-'+dateStr+'.json','application/json',JSON.stringify(S,null,2));
-  toast('💾 Yedek indirildi');
+async function exportJSON(){
+  const data = JSON.stringify(S, null, 2);
+  const dateStr = new Date().toISOString().slice(0,10);
+  const blob = new Blob([data], { type: 'application/json' });
+  const file = new File([blob], "kalorix-yedek-"+dateStr+".json", { type: 'application/json' });
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: 'KaloriX Yedeği',
+        text: 'Veri yedeğim:',
+        files: [file]
+      });
+      toast('✅ Paylaşım menüsü açıldı!');
+    } catch (err) {
+      toast('❌ Paylaşım iptal edildi');
+    }
+  } else {
+    // Paylaşım özelliği yoksa eski indirme yöntemine dön
+    downloadFile('kalorix-yedek-'+dateStr+'.json','application/json',data);
+    toast('💾 Yedek indirildi');
+  }
 }
 function restoreBackup(e){
   const f=e.target.files[0];
