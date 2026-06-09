@@ -1,0 +1,21 @@
+{
+  "appId": "com.kalorix.app",
+  "appName": "KaloriX",
+  "webDir": "www",
+  "backgroundColor": "#f7f8fa",
+  "ios": {
+    "contentInset": "automatic",
+    "backgroundColor": "#f7f8fa"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "backgroundColor": "#00a86b",
+      "showSpinner": false
+    },
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_icon",
+      "iconColor": "#00a86b"
+    }
+  }
+}

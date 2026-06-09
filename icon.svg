@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Arka plan gradyanı -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00c980"/>
+      <stop offset="100%" stop-color="#00a86b"/>
+    </linearGradient>
+    <!-- Parlama efekti -->
+    <radialGradient id="shine" cx="35%" cy="25%" r="55%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.25)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </radialGradient>
+    <!-- Gölge filtresi -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="rgba(0,100,60,0.35)"/>
+    </filter>
+    <!-- Tabak gölgesi -->
+    <filter id="shadow2">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="rgba(0,80,40,0.3)"/>
+    </filter>
+  </defs>
+
+  <!-- Yuvarlak köşeli arka plan (iOS tarzı) -->
+  <rect width="512" height="512" rx="115" ry="115" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="115" ry="115" fill="url(#shine)"/>
+
+  <!-- Tabak (oval) -->
+  <g filter="url(#shadow2)">
+    <ellipse cx="256" cy="310" rx="155" ry="22" fill="rgba(0,60,30,0.25)"/>
+    <ellipse cx="256" cy="298" rx="158" ry="28" fill="white" opacity="0.15"/>
+    <ellipse cx="256" cy="296" rx="155" ry="24" fill="white" opacity="0.9"/>
+  </g>
+
+  <!-- Tabak üst çizgi detayı -->
+  <ellipse cx="256" cy="291" rx="120" ry="8" fill="none" stroke="rgba(0,150,80,0.15)" stroke-width="2"/>
+
+  <!-- K harfi - güçlü, modern -->
+  <g filter="url(#shadow)">
+    <!-- K dikey çizgisi -->
+    <rect x="165" y="140" width="44" height="200" rx="10" fill="white"/>
+    <!-- K üst çapraz -->
+    <path d="M 209 240 L 315 140 L 348 140 L 242 240 Z" fill="white" rx="8"/>
+    <!-- K alt çapraz -->
+    <path d="M 209 248 L 315 348 L 348 348 L 242 248 Z" fill="white" rx="8"/>
+    <!-- K kavşak noktası yumuşatma -->
+    <circle cx="225" cy="244" r="24" fill="white"/>
+  </g>
+
+  <!-- Alt dekoratif çizgi -->
+  <rect x="196" y="340" width="120" height="5" rx="3" fill="rgba(255,255,255,0.5)"/>
+
+  <!-- Küçük yaprak detayı (sol alt) -->
+  <g transform="translate(105, 355) rotate(-30)" opacity="0.7">
+    <ellipse cx="0" cy="0" rx="18" ry="10" fill="rgba(255,255,255,0.6)"/>
+  </g>
+  <g transform="translate(125, 368) rotate(-50)" opacity="0.5">
+    <ellipse cx="0" cy="0" rx="13" ry="7" fill="rgba(255,255,255,0.5)"/>
+  </g>
+
+  <!-- Sağ alt nokta aksan -->
+  <circle cx="382" cy="368" r="8" fill="rgba(255,255,255,0.4)"/>
+  <circle cx="397" cy="352" r="5" fill="rgba(255,255,255,0.3)"/>
+</svg>
