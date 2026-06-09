@@ -1,13 +1,13 @@
 name: iOS KaloriX Build
-on: [push]
+on: [push, workflow_dispatch]
 jobs:
   build:
     runs-on: macos-latest
     steps:
       - name: Kodları Al
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Node.js Kurulumu
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
       - name: Gerekli Paketleri Yükle
@@ -24,7 +24,7 @@ jobs:
           mv ios/App/build/Release-iphoneos/App.app Payload/
           zip -r KaloriX.ipa Payload
       - name: Kurulum Dosyasını İndirmeye Hazırla
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: KaloriX-Uygulamasi
           path: KaloriX.ipa
